@@ -5,50 +5,59 @@ void main() {
 }
 
 class Animations extends StatelessWidget {
-  const Animations({Key? key}) : super(key: key);
+  const Animations({super.key});
 
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        body: Center(
-          child: CusotmContainer(),
-        ),
+      home: AnimationView(),
+    );
+  }
+}
+
+class AnimationView extends StatelessWidget {
+  const AnimationView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      body: Center(
+        child: CustomButton(),
       ),
     );
   }
 }
 
-class CusotmContainer extends StatefulWidget {
-  const CusotmContainer({
-    Key? key,
-  }) : super(key: key);
+class CustomButton extends StatelessWidget {
+  const CustomButton({super.key});
 
-  @override
-  State<CusotmContainer> createState() => _CusotmContainerState();
-}
-
-class _CusotmContainerState extends State<CusotmContainer> {
-  Color color = Colors.green;
-
-  double hegiht = 300;
-  double width = 200;
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          color = Colors.red;
-          hegiht = 100;
-          width = 400;
-        });
-      },
-      child: AnimatedContainer(
-        duration: const Duration(seconds: 3),
-        color: color,
-        height: hegiht,
-        width: width,
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16),
+      width: MediaQuery.of(context).size.width,
+      height: 55,
+      decoration: BoxDecoration(
+        color: Colors.green,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Center(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const [
+            Text('Hello Students'),
+            SizedBox(
+              width: 16,
+            ),
+            AnimatedCrossFade(
+              firstChild: CircleAvatar(),
+              secondChild: Text('Hi'),
+              crossFadeState: CrossFadeState.showSecond,
+              duration: Duration(milliseconds: 3000),
+            )
+          ],
+        ),
       ),
     );
   }
