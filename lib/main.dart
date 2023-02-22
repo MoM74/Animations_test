@@ -1,64 +1,68 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(const Animations());
-}
+main() => runApp(const MyApp());
 
-class Animations extends StatelessWidget {
-  const Animations({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: AnimationView(),
-    );
-  }
-}
-
-class AnimationView extends StatelessWidget {
-  const AnimationView({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: CustomButton(),
+      home: Scaffold(
+        body: AnimationExample(),
       ),
     );
   }
 }
 
-class CustomButton extends StatelessWidget {
-  const CustomButton({super.key});
+class AnimationExample extends StatefulWidget {
+  const AnimationExample({super.key});
 
   @override
+  _AnimationExampleState createState() => _AnimationExampleState();
+}
+
+class _AnimationExampleState extends State<AnimationExample> {
+  double _opacityLevel = .1;
+  double height = 200;
+  double width = 200;
+  double radius = 20;
+  Color color = Colors.black;
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      width: MediaQuery.of(context).size.width,
-      height: 55,
-      decoration: BoxDecoration(
-        color: Colors.green,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Center(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            Text('Hello Students'),
-            SizedBox(
-              width: 16,
-            ),
-            AnimatedCrossFade(
-              firstChild: CircleAvatar(),
-              secondChild: Text('Hi'),
-              crossFadeState: CrossFadeState.showSecond,
-              duration: Duration(milliseconds: 3000),
-            )
-          ],
+    return Center(
+        child: AnimatedOpacity(
+      duration: const Duration(seconds: 2),
+      opacity: _opacityLevel,
+      child: GestureDetector(
+        onTap: startAnimation,
+        child: AnimatedContainer(
+          duration: const Duration(seconds: 2),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(radius)),
+            color: color,
+          ),
+          height: height,
+          width: width,
         ),
       ),
-    );
+    ));
+  }
+
+  void changeOpacity() {
+    setState(() {
+      _opacityLevel = 1;
+    });
+  }
+
+  void startAnimation() {
+    setState(() {
+      height = Random().nextDouble() * 200;
+      width = Random().nextDouble() * 200;
+      radius = Random().nextDouble() * 100;
+      color = Color(0xFF000000 * Random().nextInt(0xFFFFFFFF));
+    });
   }
 }
