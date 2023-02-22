@@ -1,5 +1,7 @@
-import 'dart:math';
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
+import 'dart:math' as math;
 
 main() => runApp(const MyApp());
 
@@ -11,58 +13,54 @@ class MyApp extends StatelessWidget {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        body: AnimationExample(),
+        body: CustomImplicitAnimation(),
       ),
     );
   }
 }
 
-class AnimationExample extends StatefulWidget {
-  const AnimationExample({super.key});
+class CustomImplicitAnimation extends StatefulWidget {
+  const CustomImplicitAnimation({super.key});
 
   @override
-  _AnimationExampleState createState() => _AnimationExampleState();
+  _CustomImplicitAnimationState createState() =>
+      _CustomImplicitAnimationState();
 }
 
-class _AnimationExampleState extends State<AnimationExample> {
-  double _opacityLevel = .1;
-  double height = 200;
-  double width = 200;
-  double radius = 20;
-  Color color = Colors.black;
+class _CustomImplicitAnimationState extends State<CustomImplicitAnimation> {
+  double _angle = 0;
+  double _currentValue = 0;
   @override
   Widget build(BuildContext context) {
     return Center(
-        child: AnimatedOpacity(
-      duration: const Duration(seconds: 2),
-      opacity: _opacityLevel,
-      child: GestureDetector(
-        onTap: startAnimation,
-        child: AnimatedContainer(
-          duration: const Duration(seconds: 2),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(radius)),
-            color: color,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          TweenAnimationBuilder<double>(
+            duration: const Duration(seconds: 2),
+            tween: Tween(begin: 0, end: _angle),
+            child: Container(
+              height: 200,
+              width: 300,
+              color: Colors.black,
+            ),
+            builder: (_, angle, child) => Transform.rotate(
+              angle: angle,
+              child: child,
+            ),
           ),
-          height: height,
-          width: width,
-        ),
+          Slider(
+            value: _currentValue,
+            onChanged: (value) {
+              setState(() {
+                _angle = value;
+                _currentValue = value;
+              });
+            },
+            max: math.pi * 2,
+          ),
+        ],
       ),
-    ));
-  }
-
-  void changeOpacity() {
-    setState(() {
-      _opacityLevel = 1;
-    });
-  }
-
-  void startAnimation() {
-    setState(() {
-      height = Random().nextDouble() * 200;
-      width = Random().nextDouble() * 200;
-      radius = Random().nextDouble() * 100;
-      color = Color(0xFF000000 * Random().nextInt(0xFFFFFFFF));
-    });
+    );
   }
 }
